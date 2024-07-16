@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.io.IOException;
 
 @SpringBootTest
 class RemoveBgServiceTest {
@@ -17,7 +18,7 @@ class RemoveBgServiceTest {
     }
 
     @Test
-    void removeBackgroundTest() {
+    void removeBackgroundTest() throws IOException {
         svc.removeBackground(new File("resources/chair.png"));
     }
 }

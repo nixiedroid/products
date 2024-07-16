@@ -1,13 +1,10 @@
 package com.nixiedroid.products.service;
 
-import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
-
-import java.io.File;
 
 /**
  * Example of Request:<br><br>
@@ -36,7 +33,7 @@ public interface RemoveBgClient {
 
     @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     byte[] removeBackground(
-            @RequestPart("image_file") File file,
+            @RequestPart("image_file") byte[] file,
             @RequestPart("size") String size,
             @RequestHeader("X-Api-Key") String apiKey
     );

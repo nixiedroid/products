@@ -79,3 +79,21 @@
 1. Запрос для получения карточки товара с наивысшим рейтингом.
 2. Запрос для получения карточки самого дорогого/дешевого товара.
 3. Добавить возможность загружать и хранить несколько фотографий для одного товара.
+
+
+### Sitemap
+
+```mermaid
+---
+title: Sitemap
+---
+
+flowchart TB
+   root{"/(root)"} ---> pct(/api/products)
+   pct --> GETpct{{GET}}
+   pct --> POSTpct{{POST}}
+   pct ---> pctID("/{id}")
+   pctID --> GETpctID{{GET}}
+   pctID --> PUTpctID{{PUT}}
+   pctID --> DELETEpctID{{DELETE}}
+```

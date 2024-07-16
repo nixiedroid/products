@@ -8,7 +8,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Random;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 @Service
 public class RemoveBgService {
 
@@ -31,20 +33,29 @@ public class RemoveBgService {
         this.removeBgClient = removeBgClient;
     }
 
-    public void removeBackground(File file) {
-        try {
-            File out = new File(rawPath + "/" + processedPath + "/" + file.getName());
-            System.out.println(file.getAbsoluteFile());
-            System.out.println(out.getAbsoluteFile());
-            if (!out.exists()) out.createNewFile();
-            var response = new byte[]{1,2,3};
-            //removeBgClient.removeBackground(file, "preview", TOKEN);
-            try (FileOutputStream fos = new FileOutputStream(out)) {
-                fos.write(response);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void removeBackground(File file) throws IOException {
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        File out = new File(rawPath + "/" + processedPath + "/" + file.getName());
+        System.out.println(file.getAbsoluteFile());
+        System.out.println(out.getAbsoluteFile());
+        if (!out.exists()) out.createNewFile();
+        byte[] outBytes = removeBackgroundBytes(bytes);
+        try (FileOutputStream fos = new FileOutputStream(out)) {
+            fos.write(outBytes);
         }
+    }
+
+    public void removeBackground(byte[] bytes) throws IOException {
+        File out = new File(rawPath + "/" + processedPath + "/" + new Random().nextInt());
+        if (!out.exists()) out.createNewFile();
+        byte[] outBytes = removeBackgroundBytes(bytes);
+        try (FileOutputStream fos = new FileOutputStream(out)) {
+            fos.write(outBytes);
+        }
+    }
+
+    public byte[] removeBackgroundBytes(byte[] file) {
+        return removeBgClient.removeBackground(file, "preview", TOKEN);
     }
 
 }

@@ -2,6 +2,7 @@ package com.nixiedroid.products.controller;
 
 import com.nixiedroid.products.models.Product;
 import com.nixiedroid.products.models.ProductDTO;
+import com.nixiedroid.products.service.ErrorMapper;
 import com.nixiedroid.products.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,12 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
+    private final ErrorMapper mapper;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ErrorMapper mapper) {
         this.productService = productService;
+        this.mapper = mapper;
     }
 
     /**
@@ -49,7 +52,7 @@ public class ProductController {
     ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Optional<ProductDTO> dtoOptional = productService.findById(id);
         return dtoOptional.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     /**
@@ -59,9 +62,12 @@ public class ProductController {
      * @return newly created json object {@link Product} on success
      */
     @PostMapping
-    ResponseEntity<ProductDTO> addProduct(@RequestBody @Valid ProductDTO product, Errors errors) {
+    ResponseEntity<?> addProduct(@RequestBody @Valid ProductDTO product, Errors errors) {
         if (errors.hasErrors()) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(mapper.apply(errors), HttpStatus.BAD_REQUEST);
+        }
+        if (productService.existsById(product.id())) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>(productService.save(product), HttpStatus.OK);
     }
 
@@ -74,14 +80,14 @@ public class ProductController {
      * @return newly created json object {@link Product} on success
      */
     @PutMapping("/{id}")
-    ResponseEntity<ProductDTO> putProduct(@PathVariable Long id,
+    ResponseEntity<?> putProduct(@PathVariable Long id,
                                           @Valid @RequestBody ProductDTO product, Errors errors
     ) {
-        if (!Objects.equals(product.id(), id)){
+        if (!Objects.equals(product.id(), id)) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         if (errors.hasErrors()) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(mapper.apply(errors), HttpStatus.BAD_REQUEST);
         }
         if (productService.existsById(id)) {
             return new ResponseEntity<>(productService.save(product), HttpStatus.OK);
@@ -97,7 +103,7 @@ public class ProductController {
     ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         if (productService.existsById(id)) {
             productService.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
