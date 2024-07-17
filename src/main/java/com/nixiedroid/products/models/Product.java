@@ -3,11 +3,8 @@ package com.nixiedroid.products.models;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import java.util.Collection;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -50,9 +47,6 @@ public class Product {
     @Column(name = "rating", nullable = false)
     private double rating;
 
-    @Column(name = "image_url", length = 100)
-    private String image_url;
-
     @Column(name = "weight", nullable = false)
     private String weight;
 
@@ -78,11 +72,27 @@ public class Product {
     @Setter(AccessLevel.NONE)
     @EqualsAndHashCode.Exclude
             @ToString.Exclude
-    Set<Feature> special_features = new HashSet<>();
+    private Set<Feature> special_features = new HashSet<>();
+
+
+    @EqualsAndHashCode.Exclude
+    @Setter(AccessLevel.NONE)
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            mappedBy = "productId",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<ProductImage> product_images = new ArrayList<>();
+
 
     public void addFeature(Feature feature) {
         special_features.add(feature);
         feature.getProducts().add(this);
+    }
+
+    public void addImageAll(Collection<? extends ProductImage> fs) {
+        this.product_images.addAll(fs);
+        fs.forEach(p-> p.setProductId(this));
     }
 
     public void addFeatureAll(Collection<? extends Feature> fs) {

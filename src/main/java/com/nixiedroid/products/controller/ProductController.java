@@ -44,13 +44,49 @@ public class ProductController {
     }
 
     /**
-     * Listens for GET requests at <a href="/products{id}">/api/products/{id}</a>
+     * Listens for GET requests at <a href="/api/products/{id}">/api/products/{id}</a>
      *
      * @return json object {@link Product} if {id} exists or null
      */
     @GetMapping("/{id}")
     ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
         Optional<ProductDTO> dtoOptional = productService.findById(id);
+        return dtoOptional.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * Listens for GET requests at <a href="/api/products/best">/api/products/best</a>
+     *
+     * @return json object {@link Product} if {id} exists or null
+     */
+    @GetMapping("/best")
+    ResponseEntity<ProductDTO> getBestProduct() {
+        Optional<ProductDTO> dtoOptional = productService.findBestProduct();
+        return dtoOptional.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * Listens for GET requests at <a href="/api/products/best">/api/products/best</a>
+     *
+     * @return json object {@link Product} if {id} exists or null
+     */
+    @GetMapping("/cheap")
+    ResponseEntity<ProductDTO> getCheapProduct() {
+        Optional<ProductDTO> dtoOptional = productService.findCheapestProduct();
+        return dtoOptional.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * Listens for GET requests at <a href="/api/products/best">/api/products/best</a>
+     *
+     * @return json object {@link Product} if {id} exists or null
+     */
+    @GetMapping("/expensive")
+    ResponseEntity<ProductDTO> getExpensiveProduct() {
+        Optional<ProductDTO> dtoOptional = productService.findExpensiveProduct();
         return dtoOptional.map(p -> new ResponseEntity<>(p, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -73,7 +109,7 @@ public class ProductController {
 
 
     /**
-     * Listens for PUT requests at <a href="/products{id}">/api/products/{id}</a>
+     * Listens for PUT requests at <a href="/api/products{id}">/api/products/{id}</a>
      * and updates product object if {id} found
      * or creates product object if not-exists
      *
@@ -95,7 +131,7 @@ public class ProductController {
     }
 
     /**
-     * Listens for DELETE requests at <a href="/products/{id}">/api/products/{id}</a>
+     * Listens for DELETE requests at <a href="/api/products/{id}">/api/products/{id}</a>
      * and deletes product object if {id} found
      */
 

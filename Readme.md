@@ -89,11 +89,16 @@ title: Sitemap
 ---
 
 flowchart TB
-   root{"/(root)"} ---> pct(/api/products)
-   pct --> GETpct{{GET}}
-   pct --> POSTpct{{POST}}
-   pct ---> pctID("/{id}")
-   pctID --> GETpctID{{GET}}
-   pctID --> PUTpctID{{PUT}}
-   pctID --> DELETEpctID{{DELETE}}
+    root{"/(root)"} ---> pct(/api/products)
+    root ---> rbg(/api/removeBg)
+    pct --> GETpct{{GET}}
+    pct --> POSTpct{{POST}}
+    pct ---> pctID("/{id}")
+    pctID --> GETpctID{{GET}}
+    pctID --> PUTpctID{{PUT}}
+    pctID --> DELETEpctID{{DELETE}}
+    pct --> pctBest(/best) --> GETBestPct{{GET}}
+    pct --> pctExp(/cheap) --> GETExpPct{{GET}}
+    pct --> pctChe(/expensive) --> GETChePct{{GET}}
+    rbg --> POSTrbg{{POST}}
 ```

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
+import java.util.List;
 import java.util.Set;
 
 public record ProductDTO(
@@ -28,7 +29,7 @@ public record ProductDTO(
         @Max(value = 5, message = "Rating must be lower than 5")
         double rating,
 
-        String image_url,
+        List<ImageDTO> image_url,
         @NotBlank(message = "Product weight is required")
         String weight,
         @NotBlank(message = "Product warranty is required")

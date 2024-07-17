@@ -1,8 +1,11 @@
 package com.nixiedroid.products.models;
 
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 class ProductDTOTest {
@@ -11,8 +14,8 @@ class ProductDTOTest {
         ProductDTO dto1 = new ProductDTO(
                 1L, "a", "a",
                 1, "a", "a",
-                "a", false, 1,
-                "a", "2", "6 monts",
+                "a", false, 1, Collections.emptyList()
+                , "2", "6 monts",
                 Set.of(
                         new FeatureDTO("u"),
                         new FeatureDTO("g")
@@ -21,7 +24,7 @@ class ProductDTOTest {
                 1L, "a", "a",
                 1, "a", "a",
                 "a", false, 1,
-                "a", "2", "6 monts",
+                Collections.emptyList(), "2", "6 monts",
                 Set.of(
                         new FeatureDTO("u"),
                         new FeatureDTO("g")
@@ -30,7 +33,7 @@ class ProductDTOTest {
                 1L, "b", "a",
                 1, "a", "a",
                 "a", false, 1,
-                "a", "2", "6 monts",
+                Collections.emptyList(), "2", "6 monts",
                 Set.of(
                         new FeatureDTO("u"),
                         new FeatureDTO("g")

@@ -1,9 +1,11 @@
 package com.nixiedroid.products.service;
 
 import com.nixiedroid.products.models.FeatureDTO;
+import com.nixiedroid.products.models.ImageDTO;
 import com.nixiedroid.products.models.Product;
 import com.nixiedroid.products.models.ProductDTO;
 import com.nixiedroid.products.repository.FeatureRepository;
+import com.nixiedroid.products.repository.ImageRepository;
 import com.nixiedroid.products.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +21,13 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final FeatureRepository featureRepository;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository, FeatureRepository featureRepository) {
+    public ProductService(ProductRepository productRepository, FeatureRepository featureRepository, ImageRepository imageRepository) {
         this.productRepository = productRepository;
         this.featureRepository = featureRepository;
+        this.imageRepository = imageRepository;
     }
 
 
@@ -33,6 +37,18 @@ public class ProductService {
 
     public Optional<ProductDTO> findById(Long id) {
         return productRepository.findDistinctById(id).map(this::convertToDTO);
+    }
+
+    public Optional<ProductDTO> findBestProduct() {
+        return productRepository.findTopRatedProduct().map(this::convertToDTO);
+    }
+
+    public Optional<ProductDTO> findCheapestProduct() {
+        return productRepository.findLowestPriceProduct().map(this::convertToDTO);
+    }
+
+    public Optional<ProductDTO> findExpensiveProduct() {
+        return productRepository.findTopPriceProduct().map(this::convertToDTO);
     }
 
     public boolean existsById(Long id) {
@@ -60,7 +76,9 @@ public class ProductService {
                 product.getCategory(),
                 product.isAvailability(),
                 product.getRating(),
-                product.getImage_url(),
+                product.getProduct_images().stream().map(i -> new ImageDTO(
+                        i.getId(), i.getImageUrl()
+                )).collect(Collectors.toList()),
                 product.getWeight(),
                 product.getWarranty(),
                 product.getSpecialFeatures().stream()
@@ -88,15 +106,16 @@ public class ProductService {
             p.setCategory(dto.category());
             p.setAvailability(dto.availability());
             p.setRating(dto.rating());
-            p.setImage_url(dto.image_url());
+            p.addImageAll(
+                    dto.image_url().stream()
+                            .map(i -> imageRepository.findDistinctByImageUrlEqualsIgnoreCase(i.imageUrl()))
+                            .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet()));
             p.setWeight(dto.weight());
             p.setWarranty(dto.warranty());
             p.addFeatureAll(
-                    dto.special_features()
-                            .stream()
+                    dto.special_features().stream()
                             .map(f -> featureRepository.findDistinctByName(f.name()))
                             .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet()));
-
             return p;
         } else { //Update Sequence
             p = productFromDB.get();
@@ -108,7 +127,10 @@ public class ProductService {
             p.setCategory(dto.category());
             p.setAvailability(dto.availability());
             p.setRating(dto.rating());
-            p.setImage_url(dto.image_url());
+            p.addImageAll(
+                    dto.image_url().stream()
+                            .map(i -> imageRepository.findDistinctByImageUrlEqualsIgnoreCase(i.imageUrl()))
+                            .filter(Optional::isPresent).map(Optional::get).collect(Collectors.toSet()));
             p.setWeight(dto.weight());
             p.setWarranty(dto.warranty());
             p.setSpecialFeatures(

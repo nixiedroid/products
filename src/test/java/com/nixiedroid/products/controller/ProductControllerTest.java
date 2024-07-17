@@ -104,7 +104,7 @@ class ProductControllerTest {
         Mockito.when(service.existsById(2L)).thenReturn(true);
         Mockito.when(service.existsById(1L)).thenReturn(false);
         mockMvc.perform(delete("/api/products/1"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
         mockMvc.perform(delete("/api/products/2"))
                 .andExpect(status().isNoContent());
     }
