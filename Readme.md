@@ -102,3 +102,10 @@ flowchart TB
     pct --> pctChe(/expensive) --> GETChePct{{GET}}
     rbg --> POSTrbg{{POST}}
 ```
+
+### Запуск
+```shell
+
+chmod +x ./gradlew &&  ./gradlew && ./gradlew bootRun --remove.bg.token=TOKEN
+
+```

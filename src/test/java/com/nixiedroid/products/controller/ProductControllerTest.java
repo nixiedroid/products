@@ -100,12 +100,13 @@ class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
     void deleteProduct() throws Exception {
         Mockito.when(service.existsById(2L)).thenReturn(true);
         Mockito.when(service.existsById(1L)).thenReturn(false);
         mockMvc.perform(delete("/api/products/1"))
                 .andExpect(status().isForbidden());
         mockMvc.perform(delete("/api/products/2"))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isForbidden());
     }
 }

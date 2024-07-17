@@ -1,6 +1,7 @@
 package com.nixiedroid.products.controller;
 
 import com.nixiedroid.products.service.RemoveBgService;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class RemoveBgController {
         byte[] responce;
         try {
             responce = service.removeBackgroundBytes(file.getBytes());
-        } catch (IOException r) {
+        } catch (IOException  |FeignException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         HttpHeaders headers = new HttpHeaders();
