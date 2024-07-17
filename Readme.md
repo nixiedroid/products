@@ -105,7 +105,8 @@ flowchart TB
 
 ### Запуск
 ```shell
-
-chmod +x ./gradlew &&  ./gradlew && ./gradlew bootRun --remove.bg.token=TOKEN
+git clone https://github.com/nixiedroid/products.git
+cd products/
+chmod +x ./gradlew &&  ./gradlew && ./gradlew bootRun  --args='--remove.bg.token=TOKEN --server.address=0.0.0.0'
 
 ```
