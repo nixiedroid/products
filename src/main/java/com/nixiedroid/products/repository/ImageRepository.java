@@ -1,6 +1,5 @@
 package com.nixiedroid.products.repository;
 
-import com.nixiedroid.products.models.Product;
 import com.nixiedroid.products.models.ProductImage;
 import org.springframework.data.repository.ListCrudRepository;
 
