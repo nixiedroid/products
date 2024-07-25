@@ -108,6 +108,6 @@ flowchart TB
 ```shell
 git clone https://github.com/nixiedroid/products.git
 cd products/
-chmod +x ./gradlew &&  ./gradlew && ./gradlew bootRun  --args='--remove.bg.token=TOKEN --server.address=0.0.0.0'
+chmod +x ./gradlew &&  ./gradlew && ./gradlew bootRun  --args='--remove.bg.token=TOKEN --server.address=0.0.0.0 --server.port=8080'
 
 ```
