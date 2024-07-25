@@ -29,7 +29,7 @@ tasks.register('bootJarDebug') {
     dependsOn(bootJar)
     bootJar {
         from('build/classes/java/main/com/nixiedroid/products/premain/Premain.class') {
-            into '/com/nixiedroid/products'
+            into '/com/nixiedroid/products/premain'
         }
         manifest {
             attributes "Launcher-Agent-Class": "com.nixiedroid.products.premain.Premain"

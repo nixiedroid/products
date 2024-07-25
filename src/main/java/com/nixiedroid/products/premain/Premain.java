@@ -25,9 +25,9 @@ public class Premain implements ClassFileTransformer {
                             String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
-        if (className.startsWith(classPrefix)) {
+       // if (className.startsWith(classPrefix)) {
             System.out.println("Loaded [" + className + "] from module: [" + module.getName() +" ]" );
-        }
+       // }
         return null;
     }
 }
